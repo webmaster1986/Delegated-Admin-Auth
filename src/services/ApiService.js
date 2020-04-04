@@ -30,6 +30,40 @@ export const getLoginUser = () => {
     ]
 }*/
 
+// const userInfo = {
+//     "challengeQuestions": [
+//         "What is the name of your pet?",
+//         "What is your mother's maiden name?",
+//         "What is the city of your birth?",
+//     ],
+//     "email": "xelsysadm@company.com",
+//     "firstName": "xelsysadm",
+//     "lastName": "admin",
+//     "userId": "1",
+//     "userLogin": "xelsysadm"
+// }
+
+// const getChallengeQue = {
+//     "challengeQuestions": [
+//         "Who was your fifth grade teacher?",
+//         "What street did you live on in third grade?",
+//         "What is your oldest sibling's birth month and year?",
+//         "What is the name of a city where you got lost?",
+//         "Where were you when you had your first kiss?",
+//         "In what city did you meet your spouse/significant other?",
+//         "What was your childhood nickname?",
+//         "What is the name of your favorite childhood friend?",
+//         "What is the middle name of your oldest child?",
+//         "Where were you New Year's 2000?",
+//         "What is the name of your pet?",
+//         "What is your mother's maiden name?",
+//         "What is the city of your birth?",
+//         "What highschool did you attend?",
+//         "What is your oldest sibling's middle name?",
+//         "What is your favorite color?"
+//     ]
+// }
+
 export class ApiService {
 
     static async getData(url, headers, cancelToken, data) {
@@ -73,28 +107,26 @@ export class ApiService {
 
     /*  My Profile Page Services  */
     async getUserInformation() {
-        // return user
+        // return userInfo
+        // return await ApiService.getData(`GetUserInfo.json`);
         return await ApiService.getData(`/SelfService/webapi/authapi/userInformation`);
     }
 
     /*  Security Question Page Services  */
     async getChallengeQuestions() {
-        /*return {
-            "challengeQuestions": [
-                "What is the city of your birth?",
-                "What was your childhood nickname?",
-                "What is the name of your pet?"
-            ]
-        };*/
+        // return getChallengeQue
+        // return await ApiService.getData(`GetAllChallengeQue.json`);
         return await ApiService.getData(`/SelfService/webapi/unauthapi/allChallengeQuestions`);
     }
 
     async updateQuestion(name, payload) {
+        // return {"status":"completed","userId":"NA11111"}
         return await ApiService.putMethod(`/SelfService/webapi/authapi/users/${name}/challengeQuestions`, payload);
     }
 
     /*  Change Password Page Services  */
     async updatePassword(name, payload) {
+        // return {"status":"completed","userId":"NA11111"}
         return await ApiService.putMethod(`/SelfService/webapi/authapi/users/${name}/password`, payload);
     }
 }

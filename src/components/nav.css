@@ -182,4 +182,13 @@ nav ul {
         z-index: 2;
         color: #ffffff;
     }
+    .green-banner .navbar-collapse {
+        background: #9ACD32;
+    }
+    .blue-banner .navbar-collapse {
+        background: #6495ED;
+    }
+    .purple-banner .navbar-collapse {
+        background: #946fdd;
+    }
 }

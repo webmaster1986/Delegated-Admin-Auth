@@ -72,6 +72,13 @@ class Header extends Component {
                       </Link>
                     </Nav.Item>
                   </li>
+                  <li>
+                    <Nav.Item>
+                      <Link to="/SelfService/auth/security-question" className={'nav-link color-white'}>
+                        Security Questions
+                      </Link>
+                    </Nav.Item>
+                  </li>
                 </ul>
               </Nav>
               <MobileMenu/>

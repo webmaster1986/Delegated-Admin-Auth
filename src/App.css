@@ -290,6 +290,19 @@ code {
   color: white;
 }
 
+.green-banner .nav-item:hover {
+  background-color: #81b711;
+}
+
+.blue-banner .nav-item:hover {
+  background-color: #3d77e1;
+}
+
+.purple-banner .nav-item:hover {
+  background-color: #7f52d8;
+}
+
+
 .error-banner {
   background-color: #f2dede;
   color: #CC0000;
@@ -373,12 +386,12 @@ li {
 
 .red-list {
   color: red;
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 
 .green-list {
   color: green;
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 
 .bold-text {
@@ -386,9 +399,11 @@ li {
 }
 
 label {
-  font-weight: bold;
-  font-size: 14px;
+  /*font-weight: bold;*/
+  font-size: 12px !important;
   white-space: nowrap;
+  text-transform: uppercase;
+  margin-bottom: 0 !important;
 }
 
 body {
@@ -464,4 +479,16 @@ input::-webkit-inner-spin-button {
 
 input[type=number] {
   -moz-appearance:textfield; /* Firefox */
+}
+
+.pb-10-px {
+  padding-bottom: 10px;
+}
+
+.p-0 {
+  padding: 0;
+}
+
+.form-group {
+  margin-bottom: 8px !important;
 }

@@ -82,7 +82,6 @@ class MyProfile1 extends Component {
           }
           <h5>
             Basic Information {' '}
-            <Icon className="cursor-pointer text-info" type={isEditable ? 'eye' : 'edit'} theme="outlined" onClick={() => this.setState({ isEditable: !isEditable })}/>
           </h5>
 
             {
@@ -90,113 +89,108 @@ class MyProfile1 extends Component {
                 <>
                   <Row className='pl-3 pr-3'>
                     <Col lg='6' md='6' sm='12' xs='12'>
-                      <Row className='mt-3'>
-                        <Col md='3' xs='12'>
-                          <p className='text-left'>
-                            First Name :
-                          </p>
+
+                      <Form as={Row}  >
+                        <Form.Label column md="4">
+                          First Name
+                        </Form.Label>
+                        <Col md="8">
+                          <Form.Control
+                              value={firstName}
+                              name="firstName"
+                              onChange={this.handleChange}
+                              size="sm"
+                              placeholder="First Name"
+                              readOnly
+                              plaintext
+                          />
                         </Col>
-                        <Col md='7' xs='12'>
+                      </Form>
+
+                      <Form as={Row}>
+                        <Form.Label column md="4">
+                          Middle Name
+                        </Form.Label>
+                        <Col md="8">
+                          <Form.Control
+                              value={middleName}
+                              name="middleName"
+                              onChange={this.handleChange}
+                              size="sm"
+                              readOnly
+                              plaintext
+                          />
+                        </Col>
+                      </Form>
+
+                      <Form as={Row} >
+                        <Form.Label column md="4">
+                          Last Name
+                        </Form.Label>
+                        <Col md="8">
+                          <Form.Control
+                              value={lastName}
+                              name="lastName"
+                              onChange={this.handleChange}
+                              size="sm"
+                              readOnly
+                              plaintext
+                          />
+                        </Col>
+                      </Form>
+
+                      <Form as={Row} >
+                        <Form.Label column md="4">
+                          E-mail
+                        </Form.Label>
+                        <Col md="8">
+                          <Form.Control
+                              value={email === "no-email@fdny.nyc.gov" ? '' : email}
+                              name="lastName"
+                              onChange={this.handleChange}
+                              size="sm"
+                              readOnly
+                              plaintext
+                          />
+                        </Col>
+                      </Form>
+
+                      <Form as={Row} style={{alignItems: 'center'}} >
+                        <Form.Label column md="4">
+                          Date of Birth
+                        </Form.Label>
+                        <Col md="8">
                           {
-                            !isEditable ?
-                              <label>{firstName}</label>
-                              : <Form.Control
-                                type="text" placeholder="First Name" name='firstName'
-                                value={firstName || ""} onChange={this.handleChange}
-                              />
+                            isEditable ?
+                              <DatePicker
+                                  value={(DOB && moment(DOB).format("MM/DD/YYYY")) || null} dateFormat="MM/DD/YYYY"
+                                  onChange={(date) => this.handleChange({target: {name: 'DOB', value: date}})}
+                                  className='form-control form-control-sm'
+                              /> :
+                              <span style={{color: '#212529'}}>{DOB && moment(DOB).format("MM/DD/YYYY")}</span>
                           }
                         </Col>
-                      </Row>
-                      <Row className='mt-3'>
-                        <Col md='3' xs='12'>
-                          <p className='text-left'>
-                            Middle Name :
-                          </p>
-                        </Col>
-                        <Col md='7' xs='12'>
+                      </Form>
+
+                      <Form as={Row} style={{alignItems: 'center'}}>
+                        <Form.Label column md="4">
+                          SSN
+                        </Form.Label>
+                        <Col md="8">
                           {
-                            !isEditable ?
-                              <label>{middleName}</label>
-                              : <Form.Control
-                                type="text" placeholder="Middle Name" name='middleName'
-                                value={middleName || ""} onChange={this.handleChange}
-                              />
+                            isEditable ?
+                                <DatePicker
+                                    value={(SSN && moment(SSN).format("MM/DD/YYYY")) || null} dateFormat="MM/DD/YYYY"
+                                    onChange={(date) => this.handleChange({target: {name: 'SSN', value: date}})}
+                                    className='form-control form-control-sm'
+                                /> :
+                                <span style={{color: '#212529'}}>{SSN && moment(SSN).format("MM/DD/YYYY")}</span>
                           }
                         </Col>
-                      </Row>
-                      <Row className='mt-3'>
-                        <Col md='3' xs='12'>
-                          <p className='text-left'>
-                            Last Name :
-                          </p>
-                        </Col>
-                        <Col md='7' xs='12'>
-                          {
-                            !isEditable ?
-                              <label>{lastName}</label>
-                              : <Form.Control
-                                type="text" placeholder="Last Name" name='lastName'
-                                value={lastName || ""} onChange={this.handleChange}
-                              />
-                          }
-                        </Col>
-                      </Row>
+                      </Form>
+
                     </Col>
-                    <Col lg='6' md='6' sm='12' xs='12'>
-                      <Row className='mt-3'>
-                        <Col md='3' xs='12'>
-                          <p className='text-left'>
-                            E-mail :
-                          </p>
-                        </Col>
-                        <Col md='7' xs='12'>
-                          {
-                            !isEditable ?
-                              <label>{email === "no-email@fdny.nyc.gov" ? '' : email}</label>
-                              : <Form.Control
-                                type="text" placeholder="Email" name='email'
-                                value={email || ""} onChange={this.handleChange}
-                              />
-                          }
-                        </Col>
-                      </Row>
-                      <Row className='mt-3'>
-                        <Col md='3' xs='12'>
-                          <p className='text-left'>
-                            Date of Birth :
-                          </p>
-                        </Col>
-                        <Col md='7' xs='12'>
-                          {
-                            !isEditable ?
-                              <label>{DOB}</label>
-                              : <DatePicker
-                                value={(DOB && moment(DOB).format("MM/DD/YYYY")) || null} dateFormat="MM/DD/YYYY"
-                                onChange={(date) => this.handleChange({target: {name: 'DOB', value: date}})}
-                                className='form-control'
-                              />
-                          }
-                        </Col>
-                      </Row>
-                      <Row className='mt-3'>
-                        <Col md='3' xs='12'>
-                          <p className='text-left'>
-                            SSN :
-                          </p>
-                        </Col>
-                        <Col md='7' xs='12'>
-                          {
-                            !isEditable ?
-                              <label>{SSN}</label>
-                              : <DatePicker
-                                value={(SSN && moment(SSN).format("MM/DD/YYYY")) || null} dateFormat="MM/DD/YYYY"
-                                onChange={(date) => this.handleChange({target: {name: 'SSN', value: date}})}
-                                className='form-control'
-                              />
-                          }
-                        </Col>
-                      </Row>
-                    </Col>
+
                   </Row>
                   {
                     isEditable && (
@@ -213,15 +207,7 @@ class MyProfile1 extends Component {
                       </div>
                     )
                   }
-                  <Row>
-                    <Col md={12} className='blank-height'/>
-                    <Col md={12} className='margin-top'>
-                      <Link to={'/SelfService/auth/change-password'}>Change Password</Link>
-                    </Col>
-                    <Col md={12} className='margin-top'>
-                      <Link to={'/SelfService/auth/security-question'}>Change Security Questions and Answers</Link>
-                    </Col>
-                  </Row>
+
                 </>
             }
         </Container>

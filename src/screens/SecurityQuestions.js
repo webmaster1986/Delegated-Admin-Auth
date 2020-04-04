@@ -1,5 +1,5 @@
 import React from "react"
-import {Col, Row, Container, Form} from "react-bootstrap";
+import {Col, Row, Container, Form, FormGroup} from "react-bootstrap";
 import message from "antd/lib/message";
 import {ApiService} from "../services/ApiService";
 import Spin from "antd/lib/spin";
@@ -11,7 +11,8 @@ class SecurityQuestions extends React.Component {
     this.state = {
       userName: '',
       error: {},
-      allChallenges: [],
+      allChallenges: [{question: '', answer: ''}, {question: '', answer: ''}, {question: '', answer: ''}],
+      allQuestions: [],
       isLoaderShow: false,
       isEnabled: true,
       errorMessage: '',
@@ -22,8 +23,8 @@ class SecurityQuestions extends React.Component {
   }
 
   async componentDidMount() {
-    const {location} = this.props
-    let {allChallenges} = this.state;
+    const {location, isExpired} = this.props
+    let {allChallenges, errorMessage} = this.state;
     const currentPath = (location && location.pathname.split("/")) || []
     const path = (currentPath && currentPath[3]) || ""
     document.title = "My Profile";
@@ -43,24 +44,22 @@ class SecurityQuestions extends React.Component {
     } else {
       const {challengeQuestions} = userInfo;
       if (challengeQuestions && challengeQuestions.length) {
-        challengeQuestions.forEach(item => {
-          allChallenges.push({
-            question: (item && item.question) || "",
-            answer: (item && item.answer) || ""
-          })
-        })
-        this.setState({
-          allChallenges,
-          isLoaderShow: false
+        challengeQuestions.forEach((item, index) => {
+          allChallenges[index] = {question: item, answer: ''}
         })
       } else {
-        this.getChallengeQuestions()
+        errorMessage = "setChallengeFirst"
       }
+      this.setState({
+        allChallenges,
+        isLoaderShow: false,
+        errorMessage: isExpired ? 'isExpired' : errorMessage,
+      }, () => this.getChallengeQuestions())
     }
   }
 
   getChallengeQuestions = async () => {
-    let {allChallenges} = this.state;
+    let allQuestions = []
     const data = await this._apiService.getChallengeQuestions()
     if (!data || data.error) {
       window.scrollTo(0, 0);
@@ -75,7 +74,7 @@ class SecurityQuestions extends React.Component {
       const {challengeQuestions} = data;
       if (challengeQuestions && challengeQuestions.length) {
         challengeQuestions.forEach(item => {
-          allChallenges.push({
+          allQuestions.push({
             question: item,
             answer: ""
           })
@@ -83,8 +82,7 @@ class SecurityQuestions extends React.Component {
       }
 
       this.setState({
-        allChallenges,
-        errorMessage: "setChallengeFirst",
+        allQuestions: allQuestions,
         isLoaderShow: false
       })
     }
@@ -111,6 +109,10 @@ class SecurityQuestions extends React.Component {
       case 'setChallengeFirst':
         message = <Row className='error-banner pl-5'><p className='mt-3 mb-3'>
           Security Questions and Answers for the user have not been set. Please set them first.</p></Row>;
+        break;
+      case 'isExpired':
+        message = <Row className='error-banner pl-5'><p className='mt-3 mb-3'>
+          Password will be expired.</p></Row>;
         break;
       default:
         message = null;
@@ -159,7 +161,7 @@ class SecurityQuestions extends React.Component {
     if (!res || res.error) {
       window.scrollTo(0, 0);
       this.setState({
-        apiMessage: data && data.error,
+        apiMessage: data && data.error || 'Something went wrong!',
         errorMessage: 'apiError',
         afterQuestionSubmit: false,
         isQuestionSaving: false
@@ -167,6 +169,7 @@ class SecurityQuestions extends React.Component {
       // return message.error('something is wrong! please try again');
     } else {
       window.scrollTo(0, 0);
+      this.props.history.push('/SelfService/auth/success')
       this.setState({
         afterQuestionSubmit: false,
         errorMessage: "questionChange",
@@ -181,6 +184,7 @@ class SecurityQuestions extends React.Component {
             allChallenges
           })
         }
+        this.props.history.push('/SelfService/auth/success')
       })
       // return message.success('Question submitted successfully');
     }
@@ -188,15 +192,16 @@ class SecurityQuestions extends React.Component {
 
   isSaveBtnEnable = () => {
     const {allChallenges} = this.state
-    let isEnabled = true
+    let isDisabled = true
     if (allChallenges && allChallenges.length) {
-      isEnabled = !allChallenges.every((key) => key.answer)
+      isDisabled = (allChallenges.some((key) => !key.answer)) || allChallenges[0].question === allChallenges[1].question ||
+          allChallenges[0].question === allChallenges[2].question || allChallenges[1].question === allChallenges[2].question
     }
-    this.setState({ isEnabled })
+    return isDisabled
   }
 
   render() {
-    const {errorMessage, securityQuestions, allChallenges, error, isEnabled, isLoaderShow} = this.state
+    const {errorMessage, securityQuestions, allChallenges, error, isEnabled, isLoaderShow, allQuestions} = this.state
 
     let message, expiredMessage = null;
     if (errorMessage) {
@@ -217,46 +222,62 @@ class SecurityQuestions extends React.Component {
               <>
                 {
                   allChallenges && allChallenges.map((item, i) => {
-                    const data = [allChallenges[i]]
+                    const data = allQuestions
+
                     return (
-                      <Row lg='12' md='12' sm='12' xs='12' key={i.toString() + i}>
-                        <Col lg='6' md='6' sm='12' xs='12'>
-                          <Row className={"mt-2"}>
-                            <Col lg='2' md='3' sm='5' xs='5'>
-                              <Form.Label>{`Question ${i + 1}`}</Form.Label>
-                            </Col>
-                            <Col lg='10' md='9' sm='7' xs='7'>
-                              <Form.Control as="select" onChange={(e) => this.handleChange(e, i, "question")} value={(securityQuestions && securityQuestions[i].question) || ""}>
+                      <span key={i.toString() + i}>
+
+                        <Row>
+                          <Col xs='12' md='8' lg='6' xl='5'>
+                            <FormGroup controlId="formControlsSelect">
+                              <label>
+                                {`Question ${i + 1}`}
+                              </label>
+                              <Form.Control
+                                  as="select"
+                                  onChange={(e) => this.handleChange(e, i, "question")}
+                                  value={(allChallenges[i].question) || ""}
+                                  size="sm"
+                              >
                                 {
-                                  data.map((item, index) => <option key={index}>{item.question}</option>)
+                                  data.map((item, index) => <option key={index} value={item.question}>{item.question}</option>)
                                 }
                               </Form.Control>
-                            </Col>
-                          </Row>
-                        </Col>
+                            </FormGroup>
+                          </Col>
+                        </Row>
 
-                        <Col lg='6' md='6' sm='12' xs='12'>
-                          <Row className={"mt-2"}>
-                            <Col lg='2' md='3' sm='5' xs='5'>
-                              <Form.Label><span className='star-color'>*</span>{`Answer ${i + 1}`}</Form.Label>
-                            </Col>
-                            <Col lg='10' md='9' sm='7' xs='7'>
-                              <Form.Control
+                      <Row className='pb-10-px'>
+                        <Col xs='12' md='8' lg='6' xl='5'>
+                          <FormGroup controlId="formControlsSelect">
+                            <label>
+                              <span className='star-color'>*</span>
+                              {`Answer ${i + 1}`}
+                            </label>
+                            <Form.Control
                                 name={`ans ${i + 1}`}
                                 value={(allChallenges[i] && allChallenges[i].answer) || ""}
                                 onChange={(e) => this.handleChange(e, i, "answer")}
                                 onBlur={(e) => this.handleAnswerBlur(e)}
-                              />
-                              <span className="text-danger">{(error && error[`ans ${i+1}`]) || ""}</span>
-                            </Col>
-                          </Row>
+                                size="sm"
+                            />
+                            <span className="text-danger">{(error && error[`ans ${i+1}`]) || ""}</span>
+                          </FormGroup>
                         </Col>
                       </Row>
+
+                      </span>
                     )
                   })
                 }
                 <div className="text-right mt-3">
-                  <button className="btn btn-success btn-sm" onClick={this.handleChallengeSave} disabled={isEnabled}>
+                  <button
+                      className="btn btn-warning btn-sm"
+                      onClick={() => this.props.history.push('/SelfService/auth/my-profile')}
+                  >
+                    Cancel
+                  </button> &nbsp;&nbsp;
+                  <button className="btn btn-success btn-sm" onClick={this.handleChallengeSave} disabled={this.isSaveBtnEnable()}>
                     {this.state.isQuestionSaving ? <div className="spinner-border spinner-border-sm text-dark"/> : null}
                     {' '}Save
                   </button>

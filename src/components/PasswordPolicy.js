@@ -6,8 +6,8 @@ import { IconContext } from "react-icons";
 function PasswordPolicy(props) {
 	return (
 		<Fragment>
-			<div className='border-box'>
-				<h5>Password Policy</h5>
+			<div>
+				<h5 className="p-0">Password Policy</h5>
 				{/* {console.log(props.password)} */}
 				<ul>
 					{
