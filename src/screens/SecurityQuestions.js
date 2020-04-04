@@ -13,6 +13,7 @@ class SecurityQuestions extends React.Component {
       error: {},
       allChallenges: [{question: '', answer: ''}, {question: '', answer: ''}, {question: '', answer: ''}],
       allQuestions: [],
+      userInfo: {},
       isLoaderShow: false,
       isEnabled: true,
       errorMessage: '',
@@ -53,6 +54,7 @@ class SecurityQuestions extends React.Component {
       this.setState({
         allChallenges,
         isLoaderShow: false,
+        userInfo,
         errorMessage: isExpired ? 'isExpired' : errorMessage,
       }, () => this.getChallengeQuestions())
     }
@@ -114,6 +116,12 @@ class SecurityQuestions extends React.Component {
         message = <Row className='error-banner pl-5'><p className='mt-3 mb-3'>
           Password will be expired.</p></Row>;
         break;
+      case 'duplicateAnswers':
+        message = <Row className='error-banner pl-5'><p className='mt-3 mb-3'> The Security Questions and Answers could not be set because there were duplicate answers.</p></Row>;
+        break;
+      case 'sameQuestion':
+        message = <Row className='error-banner pl-5'><p className='mt-3 mb-3'>Security Questions should not be same.</p></Row>;
+        break;
       default:
         message = null;
     }
@@ -135,19 +143,41 @@ class SecurityQuestions extends React.Component {
     }
     this.setState({
       allChallenges
-    }, () => this.isSaveBtnEnable())
+    })
   }
 
   handleAnswerBlur = (e) => {
     let {error} = this.state
     const {name, value} = e.target
     error[name] = !value ? "Please provide answer" : ""
-    this.setState({ error }, () => this.isSaveBtnEnable())
+    this.setState({ error })
   }
 
   handleChallengeSave = async () => {
-    const {allChallenges, userName, path} = this.state
+    const {allChallenges, userInfo, path} = this.state
+
+    let isQuestionSame = allChallenges[0].question === allChallenges[1].question ||
+        allChallenges[0].question === allChallenges[2].question ||
+        allChallenges[1].question === allChallenges[2].question;
+
+    let isAnswerSame = allChallenges[0].answer === allChallenges[1].answer ||
+        allChallenges[0].answer === allChallenges[2].answer ||
+        allChallenges[1].answer === allChallenges[2].answer;
+
+    if (isQuestionSame) {
+      window.scrollTo(0, 0);
+      return this.setState({
+        errorMessage: 'sameQuestion',
+      })
+    } else if (isAnswerSame) {
+      window.scrollTo(0, 0);
+      return this.setState({
+        errorMessage: 'duplicateAnswers',
+      })
+    }
+
     this.setState({
+      errorMessage: '',
       afterQuestionSubmit: true,
       isQuestionSaving: true
     })
@@ -157,11 +187,11 @@ class SecurityQuestions extends React.Component {
         value: f.answer
       }))
     }
-    const res = await this._apiService.updateQuestion(userName, data)
+    const res = await this._apiService.updateQuestion(userInfo.userLogin, data)
     if (!res || res.error) {
       window.scrollTo(0, 0);
       this.setState({
-        apiMessage: data && data.error || 'Something went wrong!',
+        apiMessage: (data && data.error) || 'Something went wrong!',
         errorMessage: 'apiError',
         afterQuestionSubmit: false,
         isQuestionSaving: false
@@ -194,14 +224,17 @@ class SecurityQuestions extends React.Component {
     const {allChallenges} = this.state
     let isDisabled = true
     if (allChallenges && allChallenges.length) {
-      isDisabled = (allChallenges.some((key) => !key.answer)) || allChallenges[0].question === allChallenges[1].question ||
-          allChallenges[0].question === allChallenges[2].question || allChallenges[1].question === allChallenges[2].question
+      isDisabled = !(allChallenges[0].answer && allChallenges[1].answer && allChallenges[2].answer)
     }
     return isDisabled
   }
 
+  onCancel = () => {
+    this.props.history.push('/SelfService/auth/my-profile')
+  }
+
   render() {
-    const {errorMessage, securityQuestions, allChallenges, error, isEnabled, isLoaderShow, allQuestions} = this.state
+    const {errorMessage, allChallenges, error, isLoaderShow, allQuestions} = this.state
 
     let message, expiredMessage = null;
     if (errorMessage) {
@@ -228,7 +261,7 @@ class SecurityQuestions extends React.Component {
                       <span key={i.toString() + i}>
 
                         <Row>
-                          <Col xs='12' md='8' lg='6' xl='5'>
+                          <Col xs='12' md='8' lg='6' xl='4'>
                             <FormGroup controlId="formControlsSelect">
                               <label>
                                 {`Question ${i + 1}`}
@@ -239,16 +272,15 @@ class SecurityQuestions extends React.Component {
                                   value={(allChallenges[i].question) || ""}
                                   size="sm"
                               >
-                                {
-                                  data.map((item, index) => <option key={index} value={item.question}>{item.question}</option>)
-                                }
+                                {data.filter(item => item.question !== allChallenges[i === 0 ? 1 : i === 1 ? 0 : 0].question && item.question !== allChallenges[i === 0 ? 2 : i === 1 ? 2 : 1].question)
+                                    .map((item, index) => <option key={index} value={item.question}>{item.question}</option>)}
                               </Form.Control>
                             </FormGroup>
                           </Col>
                         </Row>
 
                       <Row className='pb-10-px'>
-                        <Col xs='12' md='8' lg='6' xl='5'>
+                        <Col xs='12' md='8' lg='6' xl='4'>
                           <FormGroup controlId="formControlsSelect">
                             <label>
                               <span className='star-color'>*</span>
@@ -273,7 +305,7 @@ class SecurityQuestions extends React.Component {
                 <div className="text-right mt-3">
                   <button
                       className="btn btn-warning btn-sm"
-                      onClick={() => this.props.history.push('/SelfService/auth/my-profile')}
+                      onClick={this.onCancel}
                   >
                     Cancel
                   </button> &nbsp;&nbsp;

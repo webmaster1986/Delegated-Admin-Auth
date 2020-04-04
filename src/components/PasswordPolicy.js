@@ -14,7 +14,7 @@ function PasswordPolicy(props) {
 						props.password.length === 0 ?
 							<li style={props.style}>Password must not match or contain first name.</li>
 							:
-							props.password.toUpperCase().includes(props.familyName) ?
+							props.password.toUpperCase().includes(props.familyName.toUpperCase()) ?
 								<li className='red-list' style={props.style}>Password must not match or contain first name.  <IconContext.Provider value={{ color: "red" }}><GoX /></IconContext.Provider></li>
 								:
 								<li className='green-list' style={props.style}>Password must not match or contain first name.  <IconContext.Provider value={{ color: "green" }}><GoCheck /></IconContext.Provider></li>
@@ -23,7 +23,7 @@ function PasswordPolicy(props) {
 						props.password.length === 0 ?
 							<li style={props.style}>Password must not match or contain last name.</li>
 							:
-							props.password.toUpperCase().includes(props.givenName) ?
+							props.password.toUpperCase().includes(props.givenName.toUpperCase()) ?
 								<li className='red-list' style={props.style}>Password must not match or contain last name.  <IconContext.Provider value={{ color: "red" }}><GoX /></IconContext.Provider></li>
 								:
 								<li className='green-list' style={props.style}>Password must not match or contain last name.  <IconContext.Provider value={{ color: "green" }}><GoCheck /></IconContext.Provider></li>
@@ -96,7 +96,7 @@ function PasswordPolicy(props) {
 						props.password.length === 0 ?
 							<li style={props.style}>Password must not match or contain user ID.</li>
 							:
-							props.password.toUpperCase().includes(props.userName) ?
+							props.password.toUpperCase().includes(props.userName.toUpperCase()) ?
 								<li className='red-list' style={props.style}>Password must not match or contain user ID.  <IconContext.Provider value={{ color: "red" }}><GoX /></IconContext.Provider></li>
 								:
 								<li className='green-list' style={props.style}>Password must not match or contain user ID.  <IconContext.Provider value={{ color: "green" }}><GoCheck /></IconContext.Provider></li>

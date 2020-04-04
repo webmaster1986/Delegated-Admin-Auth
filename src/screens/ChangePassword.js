@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Row, Col, Form, Container, FormGroup} from 'react-bootstrap';
+import {Row, Col, Form, Container} from 'react-bootstrap';
 import queryString from 'query-string'
 import SecurityQuestions from "./SecurityQuestions";
 import PasswordPolicy from '../components/PasswordPolicy'
@@ -81,7 +81,7 @@ class ChangePassword extends Component {
     }
 
     handleSaveBtnClick = async () => {
-        const {oldPassword, newPassword, confirmPassword, userName} = this.state
+        const {oldPassword, newPassword, confirmPassword, userLogin} = this.state
         this.setState({
             isSaving: true
         })
@@ -90,11 +90,11 @@ class ChangePassword extends Component {
             newPassword: newPassword,
             confirmPassword: confirmPassword
         }
-        const res = await this._apiService.updatePassword(userName, data)
+        const res = await this._apiService.updatePassword(userLogin, data)
         if (!res || res.error) {
             window.scrollTo(0, 0);
             this.setState({
-                apiMessage: data && data.error || 'Something went wrong!',
+                apiMessage: (data && data.error) || 'Something went wrong!',
                 errorMessage: 'apiError',
                 isSaving: false
             });
@@ -161,7 +161,7 @@ class ChangePassword extends Component {
 
     render()
     {
-        const {errorMessage, confirmPassword, newPassword, oldPassword, user, oldPasswordError, firstName, lastName, userLogin, isLoaderShow, requireChallengeSet, isPasswordExpired} = this.state
+        const {errorMessage, confirmPassword, newPassword, oldPassword, oldPasswordError, firstName, lastName, userLogin, isLoaderShow, requireChallengeSet, isPasswordExpired} = this.state
 
         let isPwdPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$#@$!%*?&])[A-Za-z\d$@#$!%*?&]{8,}/.test(newPassword) &&
             !newPassword.includes(userLogin) &&
@@ -212,7 +212,7 @@ class ChangePassword extends Component {
 
                                                 <Form as={Row}>
                                                     <Form.Label column md={4} xs={12}>
-                                                        <span className='star-color'>*</span>User Login
+                                                        User Login
                                                     </Form.Label>
                                                     <Col md={8} xs={12}>
                                                         <Form.Control
@@ -228,7 +228,7 @@ class ChangePassword extends Component {
                                                     <Form.Label column md={4} xs={12}>
                                                         <span className='star-color'>*</span>Current Password
                                                     </Form.Label>
-                                                    <Col md={8} xs={12}>
+                                                    <Col md={5} xs={12}>
                                                         <Form.Control
                                                             type="password"
                                                             placeholder=""
@@ -246,7 +246,7 @@ class ChangePassword extends Component {
                                                     <Form.Label column md={4} xs={12}>
                                                         <span className='star-color'>*</span>New Password
                                                     </Form.Label>
-                                                    <Col md={8} xs={12}>
+                                                    <Col md={5} xs={12}>
                                                         <Form.Control
                                                             type="password"
                                                             placeholder=""
@@ -263,7 +263,7 @@ class ChangePassword extends Component {
                                                     <Form.Label column md={4} xs={12}>
                                                         <span className='star-color'>*</span>Confirm Password
                                                     </Form.Label>
-                                                    <Col md={8} xs={12}>
+                                                    <Col md={5} xs={12}>
                                                         <Form.Control
                                                             type="password"
                                                             placeholder=""
@@ -277,29 +277,34 @@ class ChangePassword extends Component {
                                                     </Col>
                                                 </Form>
 
-                                                <div className="text-right mt-5-p">
-                                                    <button
-                                                        className="btn btn-warning btn-sm"
-                                                        onClick={() => this.props.history.push('/SelfService/auth/my-profile')}
-                                                    >
-                                                        Cancel
-                                                    </button> &nbsp;&nbsp;
-                                                    <button className="btn btn-success btn-sm"
-                                                            onClick={() => this.handleSaveBtnClick()}
-                                                            disabled={this.isSaveBtnEnable()}>
-                                                        {this.state.isSaving ? <div
-                                                            className="spinner-border spinner-border-sm text-dark"/> : null}
-                                                        {' '}Save
-                                                    </button>
-                                                </div>
+                                                <Form as={Row} className="pb-10-px">
+                                                    <Form.Label column md={4} xs={12}/>
+                                                    <Col md={5} xs={12}>
+                                                        <div className="text-right mt-5-p">
+                                                            <button
+                                                                className="btn btn-warning btn-sm"
+                                                                onClick={() => this.props.history.push('/SelfService/auth/my-profile')}
+                                                            >
+                                                                Cancel
+                                                            </button> &nbsp;&nbsp;
+                                                            <button className="btn btn-success btn-sm"
+                                                                    onClick={() => this.handleSaveBtnClick()}
+                                                                    disabled={this.isSaveBtnEnable()}>
+                                                                {this.state.isSaving ? <div
+                                                                    className="spinner-border spinner-border-sm text-dark"/> : null}
+                                                                {' '}Save
+                                                            </button>
+                                                        </div>
+                                                    </Col>
+                                                </Form>
                                             </Col>
                                             <Col md={1}/>
                                             <Col md={5} xs={12} className='margin-bottom'>
                                                 <PasswordPolicy
                                                     password={newPassword}
-                                                    familyName={lastName}
-                                                    givenName={firstName}
-                                                    userName={(userLogin || "").toUpperCase()}
+                                                    familyName={firstName || ''}
+                                                    givenName={lastName || ''}
+                                                    userName={userLogin || ""}
                                                     style={this.style.listitem}
                                                 />
                                             </Col>
