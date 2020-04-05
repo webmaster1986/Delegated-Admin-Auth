@@ -24,13 +24,9 @@ class SecurityQuestions extends React.Component {
   }
 
   async componentDidMount() {
-    const {location, isExpired} = this.props
     let {allChallenges, errorMessage} = this.state;
-    const currentPath = (location && location.pathname.split("/")) || []
-    const path = (currentPath && currentPath[3]) || ""
     document.title = "My Profile";
     this.setState({
-      path,
       isLoaderShow: true
     });
 
@@ -55,7 +51,7 @@ class SecurityQuestions extends React.Component {
         allChallenges,
         isLoaderShow: false,
         userInfo,
-        errorMessage: isExpired ? 'isExpired' : errorMessage,
+        errorMessage,
       }, () => this.getChallengeQuestions())
     }
   }
@@ -154,7 +150,7 @@ class SecurityQuestions extends React.Component {
   }
 
   handleChallengeSave = async () => {
-    const {allChallenges, userInfo, path} = this.state
+    const {allChallenges, userInfo} = this.state
 
     let isQuestionSame = allChallenges[0].question === allChallenges[1].question ||
         allChallenges[0].question === allChallenges[2].question ||
@@ -196,27 +192,13 @@ class SecurityQuestions extends React.Component {
         afterQuestionSubmit: false,
         isQuestionSaving: false
       });
-      // return message.error('something is wrong! please try again');
+
     } else {
-      window.scrollTo(0, 0);
-      this.props.history.push('/SelfService/auth/success')
-      this.setState({
-        afterQuestionSubmit: false,
-        errorMessage: "questionChange",
-        isQuestionSaving: false
-      }, () => {
-        if (path !== "security-question") {
-          this.props.handleView()
-        } else {
-          const {allChallenges} = this.state
-          allChallenges.forEach(f => f.answer = "")
-          this.setState({
-            allChallenges
-          })
-        }
-        this.props.history.push('/SelfService/auth/success')
-      })
-      // return message.success('Question submitted successfully');
+      if(this.props.isChangePassword){
+        return this.props.handleView()
+      }
+      message.success('Question submitted successfully');
+      this.props.history.push('/SelfService/auth/my-profile')
     }
   }
 
@@ -234,7 +216,7 @@ class SecurityQuestions extends React.Component {
   }
 
   render() {
-    const {errorMessage, allChallenges, error, isLoaderShow, allQuestions} = this.state
+    const {errorMessage, allChallenges, error, isLoaderShow, allQuestions, userInfo} = this.state
 
     let message, expiredMessage = null;
     if (errorMessage) {
@@ -253,6 +235,13 @@ class SecurityQuestions extends React.Component {
           {
             isLoaderShow ? <div className={'text-center'}><Spin className='mt-50 custom-loading'/></div> :
               <>
+                <Form as={Row}  >
+                  <Form.Label column xs="4" xl="1" md="2">
+                    User Login
+                    <span className="user-label">{userInfo.userLogin || ''}</span>
+                  </Form.Label>
+                </Form>
+
                 {
                   allChallenges && allChallenges.map((item, i) => {
                     const data = allQuestions
@@ -302,18 +291,20 @@ class SecurityQuestions extends React.Component {
                     )
                   })
                 }
-                <div className="text-right mt-3">
-                  <button
-                      className="btn btn-warning btn-sm"
-                      onClick={this.onCancel}
-                  >
-                    Cancel
-                  </button> &nbsp;&nbsp;
-                  <button className="btn btn-success btn-sm" onClick={this.handleChallengeSave} disabled={this.isSaveBtnEnable()}>
-                    {this.state.isQuestionSaving ? <div className="spinner-border spinner-border-sm text-dark"/> : null}
-                    {' '}Save
-                  </button>
-                </div>
+                <Col xs='12' md='8' lg='6' xl='4'>
+                  <div className="text-right mt-3">
+                    <button
+                        className="btn btn-warning btn-sm"
+                        onClick={this.onCancel}
+                    >
+                      Cancel
+                    </button> &nbsp;&nbsp;
+                    <button className="btn btn-success btn-sm" onClick={this.handleChallengeSave} disabled={this.isSaveBtnEnable()}>
+                      {this.state.isQuestionSaving ? <div className="spinner-border spinner-border-sm text-dark"/> : null}
+                      {' '}Save
+                    </button>
+                  </div>
+                </Col>
               </>
           }
         </>

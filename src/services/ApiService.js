@@ -129,4 +129,9 @@ export class ApiService {
         // return {"status":"completed","userId":"NA11111"}
         return await ApiService.putMethod(`/SelfService/webapi/authapi/users/${name}/password`, payload);
     }
+
+    async getLoginUserName() {
+        // return {"result":'DEEPA  GEORGE'}
+        return await ApiService.getData(`v1/users/name`);
+    }
 }

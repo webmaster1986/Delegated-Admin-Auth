@@ -9,13 +9,33 @@ import axios from 'axios';
 import fdny from './images/FDNY.png';
 import "./nav.css"
 import MobileMenu from "./MobileMenu";
+import {ApiService} from "../services/ApiService";
 
 class Header extends Component {
+  _apiService = new ApiService();
+  state = {
+    loginUser: ''
+  }
 
-  handleLogoutBtnClick = () => {
+  async componentDidMount() {
+    this.setState({
+      isLoading: true
+    })
+    const data =  await this._apiService.getLoginUserName()
+    if (!data || data.error) {
+      return
+    } else {
+      this.setState({
+        loginUser: (data && data.result) || ""
+      })
+    }
+  }
+
+  handleLogoutBtnClick = async () => {
     const hostUrl = window.location.protocol+'//'+window.location.host;
     let url = hostUrl + `/SelfService/webapi/authapi/logout`;
-    axios.post(url);
+    await axios.post(url);
+    window.location.href = "/oamsso/logout.html?end_url=/DelegatedAdmin/logout"
   }
 
   getReactAppEnv  = () => {
@@ -38,6 +58,7 @@ class Header extends Component {
   }
 
   render() {
+    const { loginUser } = this.state
     const envMode =  this.getReactAppEnv();
     const className = envMode === 'dev' ? 'green-banner' : envMode === 'tst' ? 'blue-banner' : envMode === 'stg' ? 'purple-banner' : 'red-banner';
 
@@ -83,6 +104,7 @@ class Header extends Component {
               </Nav>
               <MobileMenu/>
               <div className="header-nav-right">
+                <h6 className="wc-username">{loginUser ? `Welcome ${loginUser}` : ""}</h6>
                 <a className="logout" onClick={this.handleLogoutBtnClick}>Logout</a>
               </div>
             </Navbar.Collapse>

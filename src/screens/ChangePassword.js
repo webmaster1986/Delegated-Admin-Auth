@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Row, Col, Form, Container} from 'react-bootstrap';
-import queryString from 'query-string'
 import SecurityQuestions from "./SecurityQuestions";
 import PasswordPolicy from '../components/PasswordPolicy'
 import message from "antd/lib/message";
@@ -33,11 +32,7 @@ class ChangePassword extends Component {
 
     async componentDidMount() {
         document.title = "My Profile";
-		const values = queryString.parse(this.props.location.search)
-		console.log(values.code)
-		if (values.code !== undefined && values.code === 'expired') {
-			this.setState({ isPasswordExpired: true })
-		}
+
         this.setState({
             isLoaderShow: true
         });
@@ -161,7 +156,7 @@ class ChangePassword extends Component {
 
     render()
     {
-        const {errorMessage, confirmPassword, newPassword, oldPassword, oldPasswordError, firstName, lastName, userLogin, isLoaderShow, requireChallengeSet, isPasswordExpired} = this.state
+        const {errorMessage, confirmPassword, newPassword, oldPassword, oldPasswordError, firstName, lastName, userLogin, isLoaderShow, requireChallengeSet} = this.state
 
         let isPwdPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$#@$!%*?&])[A-Za-z\d$@#$!%*?&]{8,}/.test(newPassword) &&
             !newPassword.includes(userLogin) &&
@@ -177,10 +172,10 @@ class ChangePassword extends Component {
         return (
             <>
                 {
-                    requireChallengeSet && isPasswordExpired ?
+                    requireChallengeSet ?
                         <SecurityQuestions
-                            handleView={() => this.handleView()}
-                            isExpired
+                            handleView={this.handleView}
+                            isChangePassword={true}
                         /> :
                         <Container className={"container-design"}>
                             <h4 className="text-left">Change Password</h4>
@@ -193,22 +188,6 @@ class ChangePassword extends Component {
                                     <>
                                         <Row>
                                             <Col md={6} xs={12}>
-                                                {/*<Row>
-                                                <Col lg='5' md='5' sm='5' xs='5'>
-                                                    <Form.Label>
-                                                        <span className='text-danger'>*</span>
-                                                        User Login
-                                                    </Form.Label>
-                                                </Col>
-                                                <Col md={7} xs={12}>
-                                                    <Form.Control
-                                                        value={user.login || "Test User"}
-                                                        size="sm"
-                                                        plaintext
-                                                        readOnly
-                                                    />
-                                                </Col>
-                                            </Row>*/}
 
                                                 <Form as={Row}>
                                                     <Form.Label column md={4} xs={12}>

@@ -98,7 +98,6 @@ class MyProfile1 extends Component {
                               name="firstName"
                               onChange={this.handleChange}
                               size="sm"
-                              placeholder="First Name"
                               readOnly
                               plaintext
                           />
@@ -161,7 +160,8 @@ class MyProfile1 extends Component {
                           {
                             isEditable ?
                               <DatePicker
-                                  value={(DOB && moment(DOB).format("MM/DD/YYYY")) || null} dateFormat="MM/DD/YYYY"
+                                  value={(DOB && moment(DOB).format("MM/DD/YYYY")) || null}
+                                  dateFormat="MM/DD/YYYY"
                                   onChange={(date) => this.handleChange({target: {name: 'DOB', value: date}})}
                                   className='form-control form-control-sm'
                               /> :
@@ -178,7 +178,8 @@ class MyProfile1 extends Component {
                           {
                             isEditable ?
                                 <DatePicker
-                                    value={(SSN && moment(SSN).format("MM/DD/YYYY")) || null} dateFormat="MM/DD/YYYY"
+                                    value={(SSN && moment(SSN).format("MM/DD/YYYY")) || null}
+                                    dateFormat="MM/DD/YYYY"
                                     onChange={(date) => this.handleChange({target: {name: 'SSN', value: date}})}
                                     className='form-control form-control-sm'
                                 /> :
