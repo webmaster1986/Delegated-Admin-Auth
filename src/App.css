@@ -485,6 +485,10 @@ input[type=number] {
   padding-bottom: 10px;
 }
 
+.pb-30-px {
+  padding-bottom: 30px;
+}
+
 .p-0 {
   padding: 0;
 }

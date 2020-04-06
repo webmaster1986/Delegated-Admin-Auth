@@ -45,7 +45,7 @@ class ChangePassword extends Component {
                 errorMessage: 'apiError',
                 isLoaderShow: false
             });
-            return message.error('something is wrong! please try again');
+            return message.error('An error has occurred');
         } else {
             window.scrollTo(0, 0);
             const {firstName, lastName, middleName, email, dob, last4ofSSN, userLogin, userId, challengeQuestions} = data;
@@ -88,8 +88,12 @@ class ChangePassword extends Component {
         const res = await this._apiService.updatePassword(userLogin, data)
         if (!res || res.error) {
             window.scrollTo(0, 0);
+            let errMessage = 'An error has occurred.'
+            if(res && res.errorData && res.errorData.response && res.errorData.response.data && res.errorData.response.data.message) {
+                errMessage = res.errorData.response.data.message
+            }
             this.setState({
-                apiMessage: (data && data.error) || 'Something went wrong!',
+                apiMessage: errMessage,
                 errorMessage: 'apiError',
                 isSaving: false
             });

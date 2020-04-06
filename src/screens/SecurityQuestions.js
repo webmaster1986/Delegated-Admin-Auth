@@ -66,7 +66,7 @@ class SecurityQuestions extends React.Component {
         errorMessage: 'apiError',
         isLoaderShow: false
       });
-      return message.error('something is wrong! please try again');
+      return message.error('An error has occurred');
     } else {
       window.scrollTo(0, 0);
       const {challengeQuestions} = data;
@@ -197,7 +197,7 @@ class SecurityQuestions extends React.Component {
       if(this.props.isChangePassword){
         return this.props.handleView()
       }
-      message.success('Question submitted successfully');
+      message.success('Security Questions and Answers have been updated');
       this.props.history.push('/SelfService/auth/my-profile')
     }
   }
@@ -227,7 +227,7 @@ class SecurityQuestions extends React.Component {
 
     return (
       <Container className={"container-design"}>
-        <h4 className="text-left">Security Questions</h4>
+        <h4 className="text-left">Update Security Questions</h4>
         <hr/>
         {expiredMessage}
         {message}
@@ -235,7 +235,7 @@ class SecurityQuestions extends React.Component {
           {
             isLoaderShow ? <div className={'text-center'}><Spin className='mt-50 custom-loading'/></div> :
               <>
-                <Form as={Row}  >
+                <Form as={Row} className="pb-10-px" >
                   <Form.Label column xs="4" xl="1" md="2">
                     User Login
                     <span className="user-label">{userInfo.userLogin || ''}</span>
@@ -268,7 +268,7 @@ class SecurityQuestions extends React.Component {
                           </Col>
                         </Row>
 
-                      <Row className='pb-10-px'>
+                      <Row className={i === 2 ? 'pb-10-px' : 'pb-30-px'}>
                         <Col xs='12' md='8' lg='6' xl='4'>
                           <FormGroup controlId="formControlsSelect">
                             <label>

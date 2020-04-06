@@ -96,11 +96,7 @@ export class ApiService {
         }
         let resData = '';
         const response = await axiosInstance.put(url, data, config).catch(thrown => {
-            if (thrown.toString() === 'Cancel') {
-                resData = 'cancel';
-            } else {
-                resData = {error: (thrown && thrown.response && thrown.response.data && thrown.response.data.message) || 'An error has occurred'};;
-            }
+            resData = {error: 'An error has occurred.' , errorData: thrown};
         });
         return resData || response.data;
     }

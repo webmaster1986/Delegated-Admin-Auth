@@ -44,7 +44,7 @@ class MyProfile1 extends Component {
           errorMessage: 'apiError',
           isLoading: false
         });
-        return message.error('something is wrong! please try again');
+        return message.error('An error has occurred');
       } else {
         window.scrollTo(0, 0);
         const {firstName, lastName, middleName, email, dob, last4ofSSN, userLogin, userId} = data;
