@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {Row, Col, Form, Container} from 'react-bootstrap';
+import message from "antd/lib/message";
+import Spin from "antd/lib/spin";
+import queryString from "query-string"
+import {ApiService, getLoginUser} from "../services/ApiService";
 import SecurityQuestions from "./SecurityQuestions";
 import PasswordPolicy from '../components/PasswordPolicy'
-import message from "antd/lib/message";
-import {ApiService, getLoginUser} from "../services/ApiService";
-import Spin from "antd/lib/spin";
 
 class ChangePassword extends Component {
     _apiService = new ApiService();
@@ -99,13 +100,18 @@ class ChangePassword extends Component {
             });
             // return message.error('something is wrong! please try again');
         } else {
-            window.scrollTo(0, 0);
-            this.setState({
-                currentPassword: "", newPassword: "", confirmPassword: "", oldPassword: "",
-                isSaving: false, errorMessage: 'pass',
-            })
-            this.props.history.push('/SelfService/auth/success')
-            // return message.success('password updated successfully');
+            const url = this.getBackUrl()
+            if(url) {
+                window.location.href = url
+            } else {
+                window.scrollTo(0, 0);
+                this.setState({
+                    currentPassword: "", newPassword: "", confirmPassword: "", oldPassword: "",
+                    isSaving: false, errorMessage: 'pass',
+                })
+                this.props.history.push('/SelfService/auth/success')
+                // return message.success('password updated successfully');
+            }
         }
     }
 
@@ -156,6 +162,29 @@ class ChangePassword extends Component {
             requireChallengeSet: false,
             errorMessage: "questionChange"
         })
+    }
+
+    getBackUrl = () => {
+        const {location} = this.props
+        let url = ""
+        const urlObj = queryString.parse(location.search);
+        if(urlObj && Object.keys(urlObj).length){
+
+            const array = Object.keys(urlObj).map(x => x)
+            const data = []
+            array.forEach(x => {
+                if(!x) {
+                    return
+                }
+                if(x === "backUrl") {
+                    data.push(urlObj[x])
+                } else {
+                    data.push(`&${x}=${urlObj[x]}`)
+                }
+            })
+            url = data.join("")
+        }
+        return url
     }
 
     render()
@@ -256,7 +285,7 @@ class ChangePassword extends Component {
                                                             size="sm"
                                                         />
                                                         <span
-                                                            className='error-text'>{confirmPassword !== newPassword && "Passwords don't match."}</span>
+                                                            className='error-text'>{confirmPassword !== newPassword && "Passwords do not match."}</span>
                                                     </Col>
                                                 </Form>
 

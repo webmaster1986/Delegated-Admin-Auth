@@ -101,6 +101,12 @@ export class ApiService {
         return resData || response.data;
     }
 
+    async getEnvironment() {
+        // return { "environment": "dev" }
+        // return await ApiService.getData(`environment.json`);
+        return await ApiService.getData(`v1/environments`);
+    }
+
     /*  My Profile Page Services  */
     async getUserInformation() {
         // return userInfo

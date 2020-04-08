@@ -187,7 +187,7 @@ class SecurityQuestions extends React.Component {
     if (!res || res.error) {
       window.scrollTo(0, 0);
       this.setState({
-        apiMessage: (data && data.error) || 'Something went wrong!',
+        apiMessage: (data && data.error) || 'An error has occurred',
         errorMessage: 'apiError',
         afterQuestionSubmit: false,
         isQuestionSaving: false

@@ -6,7 +6,7 @@ class Success extends React.Component {
 
         return (
             <Container className={"container-design"}>
-                <h5 className="text-left">Your data saved successfully.</h5>
+                <h5 className="text-left">Your password has been changed successfully. Please <a href={`/oamsso/logout.html?end_url=/SelfService/unauth/logout`}>logout</a> and login to the application again.</h5>
             </Container>
         );
     }
