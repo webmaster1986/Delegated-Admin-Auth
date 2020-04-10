@@ -168,21 +168,22 @@ class ChangePassword extends Component {
         const {location} = this.props
         let url = ""
         const urlObj = queryString.parse(location.search);
-        if(urlObj && Object.keys(urlObj).length){
+        if(urlObj && urlObj.backUrl){
 
-            const array = Object.keys(urlObj).map(x => x)
-            const data = []
-            array.forEach(x => {
-                if(!x) {
-                    return
-                }
-                if(x === "backUrl") {
-                    data.push(urlObj[x])
-                } else {
-                    data.push(`&${x}=${urlObj[x]}`)
-                }
-            })
-            url = data.join("")
+            // const array = Object.keys(urlObj).map(x => x)
+            // const data = []
+            // array.forEach(x => {
+            //     if(!x) {
+            //         return
+            //     }
+            //     if(x === "backUrl") {
+            //         data.push(urlObj[x])
+            //     } else {
+            //         data.push(`?${x}=${urlObj[x]}`)
+            //     }
+            // })
+
+            url = `${urlObj.backUrl}${urlObj.checksum ? `?checksum=${urlObj.checksum}` : "" }`
         }
         return url
     }
