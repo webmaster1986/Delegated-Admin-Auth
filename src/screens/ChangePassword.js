@@ -191,7 +191,7 @@ class ChangePassword extends Component {
     {
         const {errorMessage, confirmPassword, newPassword, oldPassword, oldPasswordError, firstName, lastName, userLogin, isLoaderShow, requireChallengeSet} = this.state
 
-        let isPwdPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$#@$!%*?&])[A-Za-z\d$@#$!%*?&]{8,}/.test(newPassword) &&
+        let isPwdPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$#@^$!%*?&])[A-Za-z\d$@^#$!%*?&]{8,}/.test(newPassword) &&
             !newPassword.includes(userLogin) &&
             /[A-Za-z]/.test(newPassword.substring(0, 1));
 
