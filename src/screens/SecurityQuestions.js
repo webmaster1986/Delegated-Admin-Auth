@@ -57,6 +57,7 @@ class SecurityQuestions extends React.Component {
   }
 
   getChallengeQuestions = async () => {
+    const { allChallenges } = this.state
     let allQuestions = []
     const data = await this._apiService.getChallengeQuestions()
     if (!data || data.error) {
@@ -71,7 +72,11 @@ class SecurityQuestions extends React.Component {
       window.scrollTo(0, 0);
       const {challengeQuestions} = data;
       if (challengeQuestions && challengeQuestions.length) {
-        challengeQuestions.forEach(item => {
+
+        challengeQuestions.forEach((item, i) => {
+          if(i < 3 && !(allChallenges[i].question)) {
+            allChallenges[i].question = item
+          }
           allQuestions.push({
             question: item,
             answer: ""
@@ -81,6 +86,7 @@ class SecurityQuestions extends React.Component {
 
       this.setState({
         allQuestions: allQuestions,
+        allChallenges,
         isLoaderShow: false
       })
     }

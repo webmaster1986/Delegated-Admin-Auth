@@ -68,7 +68,7 @@ function PasswordPolicy(props) {
 						props.password.length === 0 ?
 							<li style={props.style}>Password must contain at least 1 special character(s).</li>
 							:
-							!/(.*[$#@$!%*?&]){1,}/.test(props.password) ?
+							!/(.*[$#@^$!%*?&]){1,}/.test(props.password) ?
 								<li className='red-list' style={props.style}>Password must contain at least 1 special character(s).  <IconContext.Provider value={{ color: "red" }}><GoX /></IconContext.Provider></li>
 								:
 								<li className='green-list' style={props.style}>Password must contain at least 1 special character(s).  <IconContext.Provider value={{ color: "green" }}><GoCheck /></IconContext.Provider></li>
