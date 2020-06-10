@@ -183,7 +183,7 @@ class MyProfile1 extends Component {
                                     onChange={(date) => this.handleChange({target: {name: 'SSN', value: date}})}
                                     className='form-control form-control-sm'
                                 /> :
-                                <span style={{color: '#212529'}}>{SSN && moment(SSN).format("MM/DD/YYYY")}</span>
+                                <span style={{color: '#212529'}}>{SSN}</span>
                           }
                         </Col>
                       </Form>
