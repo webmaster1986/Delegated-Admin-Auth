@@ -34,14 +34,6 @@ class ChangePassword extends Component {
     async componentDidMount() {
         document.title = "My Profile";
 
-        const values = queryString.parse(this.props.location.search)
-        console.log(values.code) // code=expired will be added to url if the user is redirected to this page on password expiration
-        if (values.code !== undefined && values.code === 'expired') {
-            this.setState({
-                isPasswordExpired: true
-            })
-        }
-
         this.setState({
             isLoaderShow: true
         });
@@ -125,7 +117,7 @@ class ChangePassword extends Component {
 
     isSaveBtnEnable = () => {
         const {oldPassword, newPassword, confirmPassword} = this.state
-        return !(newPassword && oldPassword && confirmPassword) || confirmPassword !== newPassword || newPassword.includes('@');
+        return !(newPassword && oldPassword && confirmPassword) || confirmPassword !== newPassword;
     }
 
     checkErr = () => {
@@ -198,14 +190,14 @@ class ChangePassword extends Component {
 
     render()
     {
-        const {errorMessage, confirmPassword, newPassword, oldPassword, oldPasswordError, firstName, lastName, userLogin, isLoaderShow, requireChallengeSet, isPasswordExpired} = this.state
+        const {errorMessage, confirmPassword, newPassword, oldPassword, oldPasswordError, firstName, lastName, userLogin, isLoaderShow, requireChallengeSet} = this.state
 
         let isPwdPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$#@^$!%*?&])[A-Za-z\d$@^#$!%*?&]{8,}/.test(newPassword) &&
             !newPassword.includes(userLogin) &&
-            /[A-Za-z]/.test(newPassword.substring(0, 1)) && !newPassword.includes('@');
+            /[A-Za-z]/.test(newPassword.substring(0, 1));
 
         let message, expiredMessage = null;
-        if (errorMessage || isPasswordExpired) {
+        if (errorMessage) {
             const err = this.checkErr()
             message = err && err.message
             expiredMessage = err && err.expiredMessage

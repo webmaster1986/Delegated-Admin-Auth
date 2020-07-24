@@ -13,7 +13,7 @@ export const getLoginUser = () => {
     }
 }
 
-/*const user = {
+const user = {
     "userLogin": "123456",
     "firstName": "User1",
     "lastName": "Demo",
@@ -28,41 +28,41 @@ export const getLoginUser = () => {
         "What was your childhood nickname?",
         "What is the name of your pet?"
     ]
-}*/
+}
 
-// const userInfo = {
-//     "challengeQuestions": [
-//         "What is the name of your pet?",
-//         "What is your mother's maiden name?",
-//         "What is the city of your birth?",
-//     ],
-//     "email": "xelsysadm@company.com",
-//     "firstName": "xelsysadm",
-//     "lastName": "admin",
-//     "userId": "1",
-//     "userLogin": "xelsysadm"
-// }
+const userInfo = {
+    "challengeQuestions": [
+        "What is the name of your pet?",
+        "What is your mother's maiden name?",
+        "What is the city of your birth?",
+    ],
+    "email": "xelsysadm@company.com",
+    "firstName": "xelsysadm",
+    "lastName": "admin",
+    "userId": "1",
+    "userLogin": "xelsysadm"
+}
 
-// const getChallengeQue = {
-//     "challengeQuestions": [
-//         "Who was your fifth grade teacher?",
-//         "What street did you live on in third grade?",
-//         "What is your oldest sibling's birth month and year?",
-//         "What is the name of a city where you got lost?",
-//         "Where were you when you had your first kiss?",
-//         "In what city did you meet your spouse/significant other?",
-//         "What was your childhood nickname?",
-//         "What is the name of your favorite childhood friend?",
-//         "What is the middle name of your oldest child?",
-//         "Where were you New Year's 2000?",
-//         "What is the name of your pet?",
-//         "What is your mother's maiden name?",
-//         "What is the city of your birth?",
-//         "What highschool did you attend?",
-//         "What is your oldest sibling's middle name?",
-//         "What is your favorite color?"
-//     ]
-// }
+const getChallengeQue = {
+    "challengeQuestions": [
+        "Who was your fifth grade teacher?",
+        "What street did you live on in third grade?",
+        "What is your oldest sibling's birth month and year?",
+        "What is the name of a city where you got lost?",
+        "Where were you when you had your first kiss?",
+        "In what city did you meet your spouse/significant other?",
+        "What was your childhood nickname?",
+        "What is the name of your favorite childhood friend?",
+        "What is the middle name of your oldest child?",
+        "Where were you New Year's 2000?",
+        "What is the name of your pet?",
+        "What is your mother's maiden name?",
+        "What is the city of your birth?",
+        "What highschool did you attend?",
+        "What is your oldest sibling's middle name?",
+        "What is your favorite color?"
+    ]
+}
 
 export class ApiService {
 
@@ -104,7 +104,7 @@ export class ApiService {
     async getEnvironment() {
         // return { "environment": "dev" }
         // return await ApiService.getData(`environment.json`);
-        return await ApiService.getData(`v1/environments`);
+        return await ApiService.getData(`/SelfService/webapi/unauthapi/environments`);
     }
 
     /*  My Profile Page Services  */
@@ -134,6 +134,6 @@ export class ApiService {
 
     async getLoginUserName() {
         // return {"result":'DEEPA  GEORGE'}
-        return await ApiService.getData(`v1/users/name`);
+        return await ApiService.getData(`/SelfService/webapi/authapi/users/name`);
     }
 }

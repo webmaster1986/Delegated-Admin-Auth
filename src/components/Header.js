@@ -35,7 +35,7 @@ class Header extends Component {
     const hostUrl = window.location.protocol+'//'+window.location.host;
     let url = hostUrl + `/SelfService/webapi/authapi/logout`;
     await axios.post(url);
-    window.location.href = "/oamsso/logout.html?end_url=/SelfService/logout"
+    window.location.href = "/oamsso/logout.html?end_url=/SelfService/auth/my-profile"
   }
 
   render() {
